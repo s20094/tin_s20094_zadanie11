@@ -8,7 +8,7 @@ function CryptoCurrency({cryptoCurrency, index, delEvent})
     return (
         <tr className={CssClassName}>
             <td>{index}</td>
-            <td><img src={cryptoCurrency.img} width="20" alt=""></img>{cryptoCurrency.abbreviation}</td>
+            <td>{cryptoCurrency.img ? <img src={cryptoCurrency.img} width="20" alt=""></img> : ''}{cryptoCurrency.abbreviation}</td>
             <td>{parseFloat(cryptoCurrency.price).toLocaleString(undefined,{minimumFractionDigits:2})}$</td>
             <td>{parseFloat(cryptoCurrency.lastDayDiff).toLocaleString(undefined,{minimumFractionDigits:2})}%</td>
             <td>{cryptoCurrency.marketCap.toLocaleString()}$</td>
