@@ -24,6 +24,7 @@ class Routing extends React.Component {
   state = {
     cryptoData: null,
     loading: true,
+    errorFetchedChecker: false
   };
 
   setCryptoData = (data) =>
@@ -35,23 +36,35 @@ class Routing extends React.Component {
     const apiUrl = `https://api.nomics.com/v1/currencies/ticker?key=${this.nomicsApiKey}&ids=BTC,ETH,USDT,BNB,ATOM,1INCH&interval=1d`;
     try{
       const response = await fetch(apiUrl)
-      const jsonResponse = await response.json()
-      const tmpCryptoData = [];
-      jsonResponse.forEach((c) => {
-        tmpCryptoData.push({
-          name: c.name,
-          abbreviation: c.symbol,
-          img: c.logo_url,
-          price: c.price,
-          lastDayDiff: c["1d"].price_change_pct * 100,
-          marketCap: c.market_cap,
+      if (response.status == 429)
+      {
+        // setErrorFetchedChecker(c => !c)
+        // this.setState({errorFetchedChecker: !this.errorFetchedChecker})
+        console.log('rerun')
+        this.setState({})
+        return this.componentDidMount()
+      }
+      else
+      {
+        const jsonResponse = await response.json()
+        const tmpCryptoData = [];
+        jsonResponse.forEach((c) => {
+          tmpCryptoData.push({
+            name: c.name,
+            abbreviation: c.symbol,
+            img: c.logo_url,
+            price: c.price,
+            lastDayDiff: c["1d"].price_change_pct * 100,
+            marketCap: c.market_cap,
+          });
         });
-      });
-      this.setState(
-        {
-          loading: false
-          ,cryptoData: tmpCryptoData
-        })
+        this.setState(
+          {
+            loading: false
+            ,cryptoData: tmpCryptoData
+          })
+      }
+
     }
     catch(e)
     { 
