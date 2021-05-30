@@ -17,13 +17,13 @@ const routing = (
         <div>
             <ul>
                 <li>
-                <Link to="/">Home</Link>
+                    <Link to="/">Home</Link>
                 </li>
                 <li>
-                <Link to="/addNewCrypto">Add new crypto</Link>
+                    <Link to="/addNewCrypto">Add new crypto</Link>
                 </li>
                 <li>
-                <Link to="/news">News</Link>
+                    <Link to="/news">News</Link>
                 </li>
             </ul>
             <Switch>
