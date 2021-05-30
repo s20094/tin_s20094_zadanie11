@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Route, Link, BrowserRouter as Router, Switch } from 
+import { Route, Link, NavLink, BrowserRouter as Router, Switch } from 
 'react-router-dom'
 import './index.css';
 
@@ -17,17 +17,17 @@ const routing = (
         <div>
             <ul>
                 <li>
-                    <Link to="/">Home</Link>
+                    <NavLink exact={true} activeClassName="active" to="/">Home</NavLink>
                 </li>
                 <li>
-                    <Link to="/addNewCrypto">Add new crypto</Link>
+                    <NavLink activeClassName="active" to="/addNewCrypto">Add new crypto</NavLink>
                 </li>
                 <li>
-                    <Link to="/news">News</Link>
+                    <NavLink activeClassName="active" to="/news">News</NavLink>
                 </li>
             </ul>
             <Switch>
-                <Route exact path="/" component={App} />
+                <Route exact={true} path="/" component={CryptoList} />
                 <Route path="/addNewCrypto" component={CryptoCurrencyForm} />
                 <Route path="/news" component={CryptoCurrencyNews} />
                 <Route component={NotFoundComponent}/>

@@ -7,9 +7,9 @@ class CryptoList extends Component
     nomicsApiKey = 'f1081ca11546b975db488be518d6045cd2bb35c9'
 
     state = {
-        loading: true
-        ,cryptoData:null
-        ,submitEnabled: true
+        cryptoData:null
+        ,loading: true
+        // ,submitEnabled: true
     }
    
 
@@ -18,6 +18,7 @@ class CryptoList extends Component
         const tmpCryptoData = Object.assign([], this.state.cryptoData)
         tmpCryptoData.splice(index, 1)
         this.setState({cryptoData:tmpCryptoData})
+        console.log(this.state.cryptoData)
     }
 
     addCrypto = (event) =>
@@ -51,7 +52,7 @@ class CryptoList extends Component
                 {
                     'Content-Type': 'application/json; charset=UTF-8',
                 },
-        })
+        }).catch(error => console.log(error))
 
     }
 
@@ -70,25 +71,38 @@ class CryptoList extends Component
     async componentDidMount()
     {
         const apiUrl = `https://api.nomics.com/v1/currencies/ticker?key=${this.nomicsApiKey}&ids=BTC,ETH,USDT,BNB,ATOM,1INCH&interval=1d`
-        const response = await (await fetch(apiUrl)).json()
-        const tmpCryptoData = []
-        response.forEach(c => {
-            tmpCryptoData.push(
+        const response = await fetch(apiUrl).catch(error => console.log(error))
+        if(response)
+        {
+            const jsonResponse = await response.json().catch(error => console.log(error))
+            const tmpCryptoData = []
+            jsonResponse.forEach(c => {
+                tmpCryptoData.push(
+                    {
+                    name: c.name
+                    ,abbreviation: c.symbol
+                    ,img: c.logo_url
+                    ,price: c.price
+                    ,lastDayDiff:  c["1d"].price_change_pct * 100
+                    ,marketCap: c.market_cap
+                    }
+                )
+            });
+            this.setState(
                 {
-                name: c.name
-                ,abbreviation: c.symbol
-                ,img: c.logo_url
-                ,price: c.price
-                ,lastDayDiff:  c["1d"].price_change_pct * 100
-                ,marketCap: c.market_cap
-                }
-            )
-        });
-        this.setState(
-            {
-                cryptoData:tmpCryptoData.sort((a,b) => b.marketCap - a.marketCap)
-                ,loading:false
-            })
+                    cryptoData:tmpCryptoData.sort((a,b) => b.marketCap - a.marketCap)
+                    ,loading:false
+                })
+                console.log(this.state.cryptoData)
+
+        }
+        // else
+        // {
+        //     setInterval(() => 
+        //     {
+        //         this.setState({})
+        //     }, 4000)
+        // }
     }
 
     render()
@@ -125,26 +139,28 @@ class CryptoList extends Component
                             {list}  
                         </tbody>                 
                     </table>
-                    {/* <p><b>Add new Crypto</b></p>
-                    <form onSubmit={this.addCrypto}>
-                        <label>Name</label><br/>
-                        <input placeholder="Cardano" type="text" name="name" defaultValue="Cardano" /><br/>
-                        <label>Abbreviation </label><label style={{color: !this.state.submitEnabled ? 'red' :'black'}}>(longer than 2 characters)</label><br/>
-                        <input placeholder="ADA" type="text" name="abbreviation" defaultValue="ADA" onChange={this.validateAbbreviation} /><br/>
-                        <label>Price</label><br/>
-                        <input placeholder="2,02" type="text" name="price" defaultValue="2.02"/><br/>
-                        <label>LastDayDiff</label><br/>
-                        <input placeholder="0,3" type="text" name="lastDayDiff" defaultValue="-5.4"/><br/>
-                        <label>MarketCap</label><br/>
-                        <input placeholder="64887369599" type="text" name="marketCap" defaultValue="34445" /><br/>
-                        <label>ICON url </label><br/>
-                        <input placeholder="https://assets.coingecko.com/coins/images/975/small/cardano.png" defaultValue="https://assets.coingecko.com/coins/images/975/small/cardano.png" type="text" name="img"/><br/>
-                        <button disabled={!this.state.submitEnabled}>Add new Crypto</button>
-                    </form>  */}
                  </div>
                  )
                 : <h2>Data loading from API..</h2> }
-            </div>
+                {/* <div>
+                    <a href="https://nomics.com" target="_blank">Crypto Market Cap &amp; Pricing Data Provided By
+                                Nomics</a>
+                    <table style={style}>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Coin</th>
+                                <th>Price</th>
+                                <th>24h diff</th>
+                                <th>Market Cap</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {list}  
+                        </tbody>                 
+                    </table>
+                </div>*/}
+            </div> 
         );
     }
 }

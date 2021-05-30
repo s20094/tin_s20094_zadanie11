@@ -1,9 +1,0 @@
-{
-    "Crypto": {
-      "name": "string",
-      "abbreviation": "string",
-      "price": "int",
-      "lastDayDiff": "int",
-      "marketCap": "int"
-    }
-  }
