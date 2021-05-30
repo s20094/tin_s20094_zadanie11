@@ -1,4 +1,7 @@
-import React from 'react'
+import React from 'react';
+import { withRouter } from 'react-router-dom'    
+
+
 class CryptoCurrencyForm extends React.Component {
     
     state = 
@@ -21,6 +24,21 @@ class CryptoCurrencyForm extends React.Component {
     addCrypto = (event) =>
     {
         event.preventDefault()
+        const {  history } = this.props
+        console.log(this.props)
+
+        const tmpCryptoData = this.props.cryptoData.filter(c => c.abbreviation !== event.target.abbreviation.value)
+        tmpCryptoData.push(
+            {
+                name: event.target.name.value
+                ,abbreviation: event.target.abbreviation.value
+                ,img: event.target.img.value
+                ,price: event.target.price.value
+                ,lastDayDiff: event.target.lastDayDiff.value
+                ,marketCap: event.target.marketCap.value
+            })
+            this.props.setCryptoData(tmpCryptoData);
+            history.push('/')
     }
 
     render() {
@@ -51,4 +69,4 @@ class CryptoCurrencyForm extends React.Component {
     )
   }
 }
-export default CryptoCurrencyForm
+export default withRouter(CryptoCurrencyForm)
